@@ -40,21 +40,17 @@ update_progress() {
 
 stage1()
 {
-    apt-get dist-upgrade -y
+    apt-get dist-upgrade -y > /dev/null 2>&1
     echo "1" > check_stage.txt
-    echo "Please REBOOT VM!!!!!"
     update_progress 15
+    echo "Please REBOOT VM!!!!!"
 }
 
 stage2()
 {
     echo "Updating package..."
-    apt update -y
+    apt update -y > /dev/null 2>&1
     update_progress 20
-    read -p "Please enter HOSTNAME for server [pmg.example.com]: " hostname
-    read -p "Please enter IP Public :" ip_public
-    hostnamectl set-hostname $hostname
-    echo "$ip_public    $hostname" >> /etc/hosts
     echo "Adding Repository...."
     echo "
 deb http://download.proxmox.com/debian/pmg bullseye pmg-no-subscription
@@ -63,11 +59,11 @@ deb http://ftp.debian.org/debian bullseye-updates main contrib
 deb http://security.debian.org/debian-security bullseye-security main contrib
     " >> /etc/apt/sources.list
     update_progress 30
-    wget https://enterprise.proxmox.com/debian/proxmox-release-bullseye.gpg -O /etc/apt/trusted.gpg.d/proxmox-release-bullseye.gpg
+    wget https://enterprise.proxmox.com/debian/proxmox-release-bullseye.gpg -O /etc/apt/trusted.gpg.d/proxmox-release-bullseye.gpg > /dev/null 2>&1
     update_progress 40
-    apt update -y
+    apt update -y > /dev/null 2>&1
     update_progress 50
-    apt-get dist-upgrade -y
+    apt-get dist-upgrade -y > /dev/null 2>&1
     update_progress 70
     echo "2" > check_stage.txt
     echo "Please REBOOT VM!!!!!"
@@ -82,11 +78,14 @@ stage3()
     fi
 
 }
-
 check_stage=$(cat check_stage.txt)
 if [ $check_stage -eq 0 ]; then
     stage1 & wait
 elif [ $check_stage -eq 1 ]; then
+    read -p "Please enter HOSTNAME for server [pmg.example.com]: " hostname
+    read -p "Please enter IP Public :" ip_public
+    hostnamectl set-hostname $hostname
+    echo "$ip_public    $hostname" >> /etc/hosts
     stage2 & wait
 elif [ $check_stage -eq 2 ]; then
     stage3 & wait
