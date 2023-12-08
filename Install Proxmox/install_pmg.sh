@@ -43,6 +43,7 @@ stage1()
     apt-get dist-upgrade -y
     echo "1" > check_stage.txt
     update_progress 15
+    echo "Please REBOOT VM!!!!!"
 }
 
 stage2()
@@ -69,6 +70,7 @@ stage2()
     apt-get dist-upgrade -y
     update_progress 70
     echo "2" > check_stage.txt
+    echo "Please REBOOT VM!!!!!"
 }
 
 stage3()
