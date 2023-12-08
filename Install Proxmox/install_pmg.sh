@@ -42,8 +42,8 @@ stage1()
 {
     apt-get dist-upgrade -y
     echo "1" > check_stage.txt
-    update_progress 15
     echo "Please REBOOT VM!!!!!"
+    update_progress 15
 }
 
 stage2()
@@ -57,10 +57,10 @@ stage2()
     echo "$ip_public    $hostname" >> /etc/hosts
     echo "Adding Repository...."
     echo "
-    deb http://download.proxmox.com/debian/pmg bullseye pmg-no-subscription
-    deb http://ftp.debian.org/debian bullseye main contrib
-    deb http://ftp.debian.org/debian bullseye-updates main contrib
-    deb http://security.debian.org/debian-security bullseye-security main contrib
+deb http://download.proxmox.com/debian/pmg bullseye pmg-no-subscription
+deb http://ftp.debian.org/debian bullseye main contrib
+deb http://ftp.debian.org/debian bullseye-updates main contrib
+deb http://security.debian.org/debian-security bullseye-security main contrib
     " >> /etc/apt/sources.list
     update_progress 30
     wget https://enterprise.proxmox.com/debian/proxmox-release-bullseye.gpg -O /etc/apt/trusted.gpg.d/proxmox-release-bullseye.gpg
